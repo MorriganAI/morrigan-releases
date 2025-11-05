@@ -90,12 +90,12 @@ chmod +x morrigan-client-{version}-linux-x64.AppImage
 ## 📋 System Requirements
 
 ### Minimum Requirements
-- **OS**: Windows 10+, macOS 11+, or Linux (kernel 4.x+)
+- **OS**: Windows 10+, macOS 11+, or Linux (kernel 5.x+)
 - **RAM**: 4 GB
 - **Storage**: 500 MB free space
 
 ### Recommended Requirements
-- **OS**: Windows 11, macOS 13+, or Linux (kernel 5.x+)
+- **OS**: Windows 11, macOS 13+, or Linux (kernel 6.x+)
 - **RAM**: 8 GB or more
 - **Storage**: 1 GB free space
 
@@ -111,7 +111,7 @@ chmod +x morrigan-client-{version}-linux-x64.AppImage
 
 ## 📝 Full Changelog
 
-For a complete list of changes, see [CHANGELOG.md](../CHANGELOG.md)
+For a complete list of changes, see [CHANGELOG.md](../../CHANGELOG.md)
 
 ---
 

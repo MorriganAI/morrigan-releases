@@ -51,7 +51,7 @@ jobs:
           echo "$NOTES" > release_notes.txt
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           name: Morrigan Client ${{ steps.version.outputs.tag }}
           body_path: release_notes.txt
