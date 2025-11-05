@@ -1,0 +1,66 @@
+---
+name: Create Release
+
+'on':
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+
+          # Extract the section for this version from CHANGELOG.md
+          if [ -f "CHANGELOG.md" ]; then
+            # Try to extract the section between [Version] headers
+            NOTES=$(awk "/## \[${VERSION}\]/,/## \[.*\]/{
+              if(/## \[${VERSION}\]/) p=1;
+              else if(/## \[.*\]/) p=0;
+              if(p && !/## \[${VERSION}\]/) print
+            }" CHANGELOG.md)
+
+            if [ -z "$NOTES" ]; then
+              NOTES="Release version ${VERSION}"
+            fi
+          else
+            NOTES="Release version ${VERSION}"
+          fi
+
+          # Save to file to preserve multiline
+          echo "$NOTES" > release_notes.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Morrigan Client ${{ steps.version.outputs.tag }}
+          body_path: release_notes.txt
+          draft: false
+          prerelease: >-
+            ${{
+              contains(steps.version.outputs.tag, '-alpha') ||
+              contains(steps.version.outputs.tag, '-beta') ||
+              contains(steps.version.outputs.tag, '-rc')
+            }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
